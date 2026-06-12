@@ -11,29 +11,33 @@ This repository contains Homebrew formulae and release assets for installing run
 | `api-pilot-runner` | `1.0.6` | Local HTTP runner for executing API requests from Collections against localhost, VPN, or private networks. |
 | `api-pilot-test-runner` | `1.0.2` | Local browser runner for TestPilot web execution. Requires Node.js and Playwright browser dependencies. |
 
-## Production API Base URL
+## API Base URL
 
-For API Pilot production, use this API base URL when pairing and starting a runner:
+The runner must connect to your API Pilot backend API base URL. Get the exact URL from the runner installation tutorial inside your API Pilot platform or workspace.
+
+Use this placeholder in the examples below:
 
 ```bash
-https://api-apipilot.coopstack.cloud/api/v1
+<API_PILOT_API_BASE_URL>
 ```
 
-Set it as an environment variable before running `pair` or `start`.
+The value must include the API version path when your platform shows one, for example `/api/v1`.
+
+Set the URL as an environment variable before running `pair` or `start`.
 
 macOS/Linux:
 
 ```bash
-export API_PILOT_BASE_URL="https://api-apipilot.coopstack.cloud/api/v1"
+export API_PILOT_BASE_URL="<API_PILOT_API_BASE_URL>"
 ```
 
 Windows PowerShell:
 
 ```powershell
-$env:API_PILOT_BASE_URL = "https://api-apipilot.coopstack.cloud/api/v1"
+$env:API_PILOT_BASE_URL = "<API_PILOT_API_BASE_URL>"
 ```
 
-Do not use the frontend URL `https://apipilot.coopstack.cloud` as `API_PILOT_BASE_URL`. The runner talks to the backend API host.
+Do not use the browser/frontend URL unless your platform tutorial explicitly says it is also the backend API base URL. The runner talks to backend API routes, not to the web UI shell.
 
 ## macOS Install With Homebrew
 
@@ -184,21 +188,21 @@ npx playwright install-deps chromium
 macOS/Linux:
 
 ```bash
-export API_PILOT_BASE_URL="https://api-apipilot.coopstack.cloud/api/v1"
+export API_PILOT_BASE_URL="<API_PILOT_API_BASE_URL>"
 api-pilot-runner pair <PAIRING_TOKEN>
 ```
 
 Windows PowerShell:
 
 ```powershell
-$env:API_PILOT_BASE_URL = "https://api-apipilot.coopstack.cloud/api/v1"
+$env:API_PILOT_BASE_URL = "<API_PILOT_API_BASE_URL>"
 api-pilot-runner pair <PAIRING_TOKEN>
 ```
 
 For TestPilot browser runner:
 
 ```bash
-export API_PILOT_BASE_URL="https://api-apipilot.coopstack.cloud/api/v1"
+export API_PILOT_BASE_URL="<API_PILOT_API_BASE_URL>"
 api-pilot-test-runner pair <PAIRING_TOKEN>
 api-pilot-test-runner doctor
 ```
@@ -206,7 +210,7 @@ api-pilot-test-runner doctor
 On Windows PowerShell:
 
 ```powershell
-$env:API_PILOT_BASE_URL = "https://api-apipilot.coopstack.cloud/api/v1"
+$env:API_PILOT_BASE_URL = "<API_PILOT_API_BASE_URL>"
 api-pilot-test-runner pair <PAIRING_TOKEN>
 api-pilot-test-runner doctor
 ```
@@ -216,28 +220,28 @@ api-pilot-test-runner doctor
 Start the HTTP runner:
 
 ```bash
-export API_PILOT_BASE_URL="https://api-apipilot.coopstack.cloud/api/v1"
+export API_PILOT_BASE_URL="<API_PILOT_API_BASE_URL>"
 api-pilot-runner start
 ```
 
 Windows PowerShell:
 
 ```powershell
-$env:API_PILOT_BASE_URL = "https://api-apipilot.coopstack.cloud/api/v1"
+$env:API_PILOT_BASE_URL = "<API_PILOT_API_BASE_URL>"
 api-pilot-runner start
 ```
 
 Start the TestPilot browser runner:
 
 ```bash
-export API_PILOT_BASE_URL="https://api-apipilot.coopstack.cloud/api/v1"
+export API_PILOT_BASE_URL="<API_PILOT_API_BASE_URL>"
 api-pilot-test-runner start
 ```
 
 Windows PowerShell:
 
 ```powershell
-$env:API_PILOT_BASE_URL = "https://api-apipilot.coopstack.cloud/api/v1"
+$env:API_PILOT_BASE_URL = "<API_PILOT_API_BASE_URL>"
 api-pilot-test-runner start
 ```
 
@@ -300,19 +304,13 @@ Use a local runner for:
 
 ### Pairing Fails With `404`
 
-Use the backend API URL:
+Use the backend API base URL shown in your API Pilot runner tutorial:
 
 ```bash
-API_PILOT_BASE_URL=https://api-apipilot.coopstack.cloud/api/v1 api-pilot-runner pair <PAIRING_TOKEN>
+API_PILOT_BASE_URL=<API_PILOT_API_BASE_URL> api-pilot-runner pair <PAIRING_TOKEN>
 ```
 
-Do not use:
-
-```bash
-API_PILOT_BASE_URL=https://apipilot.coopstack.cloud/api/v1
-```
-
-The `apipilot.coopstack.cloud` host serves the frontend and does not expose runner API routes.
+If you receive `404`, confirm that `API_PILOT_BASE_URL` points to the backend API host and includes the expected API version path. A frontend/web UI URL often serves pages only and will not expose runner API routes.
 
 ### Pairing Token Expired Or Already Claimed
 
@@ -404,4 +402,3 @@ README.md
 ```
 
 The application source code lives in the private API Pilot monorepo. This repository is only for public runner distribution.
-
