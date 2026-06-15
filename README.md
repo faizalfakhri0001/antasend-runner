@@ -9,7 +9,7 @@ This repository contains Homebrew formulae and release assets for installing run
 | Binary | Current version | Purpose |
 | --- | --- | --- |
 | `api-pilot-runner` | `1.0.6` | Local HTTP runner for executing API requests from Collections against localhost, VPN, or private networks. |
-| `api-pilot-test-runner` | `1.0.2` | Local browser runner for TestPilot web execution. Requires Node.js and Playwright browser dependencies. |
+| `api-pilot-test-runner` | `1.0.3` | Local browser runner for TestPilot web execution. Requires Node.js and Playwright browser dependencies. |
 
 ## API Base URL
 
@@ -106,7 +106,7 @@ Windows binaries are distributed as `.zip` files in GitHub Releases.
 
 1. Install Node.js LTS from [nodejs.org](https://nodejs.org/).
 2. Download:
-   - [api-pilot-test-runner-windows-amd64.zip](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v1.0.2/api-pilot-test-runner-windows-amd64.zip)
+   - [api-pilot-test-runner-windows-amd64.zip](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v1.0.3/api-pilot-test-runner-windows-amd64.zip)
 3. Extract the zip to a permanent folder, for example:
 
    ```text
@@ -117,9 +117,10 @@ Windows binaries are distributed as `.zip` files in GitHub Releases.
 5. Install worker dependencies from the extracted folder:
 
    ```powershell
-   cd C:\api-pilot-test-runner
+   cd C:\api-pilot-test-runner\worker
    npm ci --omit=dev
    npx playwright install chromium
+   cd ..
    api-pilot-test-runner doctor
    ```
 
@@ -127,10 +128,11 @@ The extracted folder must keep these files together:
 
 ```text
 api-pilot-test-runner.exe
-testpilot_worker.mjs
-package.json
-package-lock.json
-node_modules\
+worker\
+  testpilot_worker.mjs
+  package.json
+  package-lock.json
+  node_modules\
 ```
 
 ## Linux Manual Install
@@ -159,12 +161,14 @@ mkdir -p "$HOME/.local/api-pilot-test-runner"
 cd "$HOME/.local/api-pilot-test-runner"
 
 curl -L -o api-pilot-test-runner-linux-amd64.tar.gz \
-  https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v1.0.2/api-pilot-test-runner-linux-amd64.tar.gz
+  https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v1.0.3/api-pilot-test-runner-linux-amd64.tar.gz
 
 tar -xzf api-pilot-test-runner-linux-amd64.tar.gz
 chmod +x api-pilot-test-runner
+cd worker
 npm ci --omit=dev
 npx playwright install chromium
+cd ..
 
 sudo ln -sf "$HOME/.local/api-pilot-test-runner/api-pilot-test-runner" /usr/local/bin/api-pilot-test-runner
 api-pilot-test-runner doctor
@@ -291,14 +295,14 @@ Use a local runner for:
 | Windows x64 | [api-pilot-runner-windows-amd64.zip](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-runner-v1.0.6/api-pilot-runner-windows-amd64.zip) |
 | Linux x64 | [api-pilot-runner-linux-amd64.tar.gz](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-runner-v1.0.6/api-pilot-runner-linux-amd64.tar.gz) |
 
-### `api-pilot-test-runner-v1.0.2`
+### `api-pilot-test-runner-v1.0.3`
 
 | Platform | Asset |
 | --- | --- |
-| macOS Apple Silicon | [api-pilot-test-runner-mac-arm64.tar.gz](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v1.0.2/api-pilot-test-runner-mac-arm64.tar.gz) |
-| macOS Intel | [api-pilot-test-runner-mac-amd64.tar.gz](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v1.0.2/api-pilot-test-runner-mac-amd64.tar.gz) |
-| Windows x64 | [api-pilot-test-runner-windows-amd64.zip](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v1.0.2/api-pilot-test-runner-windows-amd64.zip) |
-| Linux x64 | [api-pilot-test-runner-linux-amd64.tar.gz](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v1.0.2/api-pilot-test-runner-linux-amd64.tar.gz) |
+| macOS Apple Silicon | [api-pilot-test-runner-mac-arm64.tar.gz](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v1.0.3/api-pilot-test-runner-mac-arm64.tar.gz) |
+| macOS Intel | [api-pilot-test-runner-mac-amd64.tar.gz](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v1.0.3/api-pilot-test-runner-mac-amd64.tar.gz) |
+| Windows x64 | [api-pilot-test-runner-windows-amd64.zip](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v1.0.3/api-pilot-test-runner-windows-amd64.zip) |
+| Linux x64 | [api-pilot-test-runner-linux-amd64.tar.gz](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v1.0.3/api-pilot-test-runner-linux-amd64.tar.gz) |
 
 ## Troubleshooting
 

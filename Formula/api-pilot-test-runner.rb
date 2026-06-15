@@ -1,14 +1,14 @@
 class ApiPilotTestRunner < Formula
   desc "Local TestPilot browser runner for API Pilot"
   homepage "https://github.com/faizalfakhri0001/api-pilot-runner"
-  version "1.0.2"
+  version "1.0.3"
 
   if Hardware::CPU.arm?
-    url "https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v1.0.2/api-pilot-test-runner-mac-arm64.tar.gz"
-    sha256 "35691647c7565ae39f07ba9d8c27ca1356678e75c0b7734fdcda8c1d272d391b"
+    url "https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v1.0.3/api-pilot-test-runner-mac-arm64.tar.gz"
+    sha256 "a5ca19b4639f4db8a006d639947feac46167a6a4179c2b46ce7c00c31e7959a7"
   else
-    url "https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v1.0.2/api-pilot-test-runner-mac-amd64.tar.gz"
-    sha256 "8b01e803b8021afa958c10905137bd651f78852029c8bd3859ea2b151128f3f2"
+    url "https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v1.0.3/api-pilot-test-runner-mac-amd64.tar.gz"
+    sha256 "e11dcccebaa3b652be7aa75f100a9608bf483781f715a6bffb214ff095eb7cfd"
   end
 
   depends_on "node"
