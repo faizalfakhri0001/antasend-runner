@@ -9,7 +9,7 @@ This repository contains Homebrew formulae and release assets for installing run
 | Binary | Current version | Purpose |
 | --- | --- | --- |
 | `api-pilot-runner` | `1.0.6` | Local HTTP runner for executing API requests from Collections against localhost, VPN, or private networks. |
-| `api-pilot-test-runner` | `1.0.3` | Local browser runner for TestPilot web execution. Requires Node.js and Playwright browser dependencies. |
+| `api-pilot-test-runner` | `1.1.0` | Local browser runner for sequential TestPilot case and suite execution. Requires Node.js and Playwright browser dependencies. |
 
 ## API Base URL
 
@@ -57,10 +57,9 @@ api-pilot-runner version
 brew tap faizalfakhri0001/api-pilot-runner https://github.com/faizalfakhri0001/api-pilot-runner.git
 brew install api-pilot-test-runner
 api-pilot-test-runner version
-api-pilot-test-runner doctor
 ```
 
-The `api-pilot-test-runner` formula installs Node dependencies and Chromium through Playwright during installation.
+The formula automatically selects the macOS Apple Silicon (`arm64`) or Intel (`amd64`) release and installs Node dependencies plus Chromium through Playwright. Pair the runner before running `doctor`, because the diagnostic now validates the credential file and API URL in addition to Node, Playwright, Chromium, architecture, permissions, and capabilities. TestPilot requires runner version `1.1.0` or newer.
 
 ### Upgrade On macOS
 
@@ -104,36 +103,7 @@ Windows binaries are distributed as `.zip` files in GitHub Releases.
 
 ### Install The TestPilot Browser Runner
 
-1. Install Node.js LTS from [nodejs.org](https://nodejs.org/).
-2. Download:
-   - [api-pilot-test-runner-windows-amd64.zip](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v1.0.3/api-pilot-test-runner-windows-amd64.zip)
-3. Extract the zip to a permanent folder, for example:
-
-   ```text
-   C:\api-pilot-test-runner\
-   ```
-
-4. Add that folder to the Windows `Path` environment variable.
-5. Install worker dependencies from the extracted folder:
-
-   ```powershell
-   cd C:\api-pilot-test-runner\worker
-   npm ci --omit=dev
-   npx playwright install chromium
-   cd ..
-   api-pilot-test-runner doctor
-   ```
-
-The extracted folder must keep these files together:
-
-```text
-api-pilot-test-runner.exe
-worker\
-  testpilot_worker.mjs
-  package.json
-  package-lock.json
-  node_modules\
-```
+The current supported TestPilot runner release is distributed for macOS through Homebrew. Windows packaging remains unavailable for version `1.1.0`; do not install the legacy `1.0.3` binary because the API rejects it with an actionable upgrade error.
 
 ## Linux Manual Install
 
@@ -154,31 +124,7 @@ api-pilot-runner version
 
 ### Install The TestPilot Browser Runner
 
-Install Node.js LTS first. Then:
-
-```bash
-mkdir -p "$HOME/.local/api-pilot-test-runner"
-cd "$HOME/.local/api-pilot-test-runner"
-
-curl -L -o api-pilot-test-runner-linux-amd64.tar.gz \
-  https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v1.0.3/api-pilot-test-runner-linux-amd64.tar.gz
-
-tar -xzf api-pilot-test-runner-linux-amd64.tar.gz
-chmod +x api-pilot-test-runner
-cd worker
-npm ci --omit=dev
-npx playwright install chromium
-cd ..
-
-sudo ln -sf "$HOME/.local/api-pilot-test-runner/api-pilot-test-runner" /usr/local/bin/api-pilot-test-runner
-api-pilot-test-runner doctor
-```
-
-If Playwright reports missing OS packages, install its system dependencies:
-
-```bash
-npx playwright install-deps chromium
-```
+The current supported TestPilot runner release is distributed for macOS through Homebrew. Linux packaging remains unavailable for version `1.1.0`; do not install the legacy `1.0.3` binary because the API rejects it with an actionable upgrade error.
 
 ## Pair A Runner
 
@@ -285,6 +231,13 @@ Use a local runner for:
 4. In TestPilot, select an online local runner with TestPilot Web capability.
 
 ## Release Assets
+
+### `api-pilot-test-runner-v1.1.0`
+
+| Platform | Asset |
+| --- | --- |
+| macOS Apple Silicon | [api-pilot-test-runner-mac-arm64.tar.gz](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v1.1.0/api-pilot-test-runner-mac-arm64.tar.gz) |
+| macOS Intel | [api-pilot-test-runner-mac-amd64.tar.gz](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v1.1.0/api-pilot-test-runner-mac-amd64.tar.gz) |
 
 ### `api-pilot-runner-v1.0.6`
 
