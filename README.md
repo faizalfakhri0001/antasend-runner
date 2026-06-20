@@ -9,7 +9,7 @@ This repository contains Homebrew formulae and release assets for installing run
 | Binary | Current version | Purpose |
 | --- | --- | --- |
 | `api-pilot-runner` | `1.1.0` | Local HTTP runner for executing API requests from Collections against localhost, VPN, or private networks. |
-| `api-pilot-test-runner` | `2.1.0` | Local browser runner for sequential TestPilot execution with opt-in video and Playwright trace capture. Requires Node.js and Playwright browser dependencies. |
+| `api-pilot-test-runner` | `2.1.1` | Local browser runner for sequential TestPilot execution with opt-in video and Playwright trace capture using resumable uploads. Requires Node.js and Playwright browser dependencies. |
 
 ## API Base URL
 
@@ -103,7 +103,7 @@ Windows binaries are distributed as `.zip` files in GitHub Releases.
 
 ### Install The TestPilot Browser Runner
 
-The current supported TestPilot runner release is distributed for macOS through Homebrew. Windows packaging remains unavailable for version `2.1.0`; do not install legacy binaries because DSL v2 jobs require explicit runner capabilities.
+The current supported TestPilot runner release is distributed for macOS through Homebrew. Windows packaging remains unavailable for version `2.1.1`; do not install legacy binaries because DSL v2 jobs require explicit runner capabilities.
 
 ## Linux Manual Install
 
@@ -124,7 +124,7 @@ api-pilot-runner version
 
 ### Install The TestPilot Browser Runner
 
-The current supported TestPilot runner release is distributed for macOS through Homebrew. Linux packaging remains unavailable for version `2.1.0`; do not install legacy binaries because DSL v2 jobs require explicit runner capabilities.
+The current supported TestPilot runner release is distributed for macOS through Homebrew. Linux packaging remains unavailable for version `2.1.1`; do not install legacy binaries because DSL v2 jobs require explicit runner capabilities.
 
 ## Pair A Runner
 
