@@ -86,7 +86,7 @@ Windows binaries are distributed as `.zip` files in GitHub Releases.
 ### Install The HTTP Runner
 
 1. Download:
-   - [api-pilot-runner-windows-amd64.zip](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-runner-v1.1.0/api-pilot-runner-windows-amd64.zip)
+   - [api-pilot-runner-windows-amd64.zip](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-runner-v1.2.0/api-pilot-runner-windows-amd64.zip)
 2. Extract the zip.
 3. Move `api-pilot-runner.exe` to a permanent folder, for example:
 
@@ -103,7 +103,18 @@ Windows binaries are distributed as `.zip` files in GitHub Releases.
 
 ### Install The TestPilot Browser Runner
 
-The current supported TestPilot runner release is distributed for macOS through Homebrew. Windows packaging remains unavailable for version `2.2.0`; do not install legacy binaries because DSL v2 jobs require explicit runner capabilities.
+1. Install Node.js 20 or newer.
+2. Download and extract [api-pilot-test-runner-windows-amd64.zip](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v2.2.0/api-pilot-test-runner-windows-amd64.zip).
+3. Keep `api-pilot-test-runner.exe` beside the extracted `worker` directory.
+4. Install the worker dependencies from PowerShell:
+
+   ```powershell
+   cd worker
+   npm ci --omit=dev
+   npx playwright install chromium
+   cd ..
+   .\api-pilot-test-runner.exe version
+   ```
 
 ## Linux Manual Install
 
@@ -113,7 +124,7 @@ Linux binaries are distributed as `.tar.gz` files in GitHub Releases.
 
 ```bash
 curl -L -o api-pilot-runner-linux-amd64.tar.gz \
-  https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-runner-v1.1.0/api-pilot-runner-linux-amd64.tar.gz
+  https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-runner-v1.2.0/api-pilot-runner-linux-amd64.tar.gz
 
 tar -xzf api-pilot-runner-linux-amd64.tar.gz
 chmod +x api-pilot-runner
@@ -124,7 +135,23 @@ api-pilot-runner version
 
 ### Install The TestPilot Browser Runner
 
-The current supported TestPilot runner release is distributed for macOS through Homebrew. Linux packaging remains unavailable for version `2.2.0`; do not install legacy binaries because DSL v2 jobs require explicit runner capabilities.
+```bash
+curl -L -o api-pilot-test-runner-linux-amd64.tar.gz \
+  https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v2.2.0/api-pilot-test-runner-linux-amd64.tar.gz
+
+mkdir -p "$HOME/.local/lib/api-pilot-test-runner"
+tar -xzf api-pilot-test-runner-linux-amd64.tar.gz \
+  -C "$HOME/.local/lib/api-pilot-test-runner"
+chmod +x "$HOME/.local/lib/api-pilot-test-runner/api-pilot-test-runner"
+
+cd "$HOME/.local/lib/api-pilot-test-runner/worker"
+npm ci --omit=dev
+npx playwright install --with-deps chromium
+cd ..
+./api-pilot-test-runner version
+```
+
+Node.js 20 or newer is required. Keep the extracted `worker` directory adjacent to the binary.
 
 ## Pair A Runner
 
@@ -246,6 +273,8 @@ Use a local runner for:
 | --- | --- |
 | macOS Apple Silicon | [api-pilot-runner-mac-arm64.tar.gz](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-runner-v1.2.0/api-pilot-runner-mac-arm64.tar.gz) |
 | macOS Intel | [api-pilot-runner-mac-amd64.tar.gz](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-runner-v1.2.0/api-pilot-runner-mac-amd64.tar.gz) |
+| Windows x64 | [api-pilot-runner-windows-amd64.zip](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-runner-v1.2.0/api-pilot-runner-windows-amd64.zip) |
+| Linux x64 | [api-pilot-runner-linux-amd64.tar.gz](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-runner-v1.2.0/api-pilot-runner-linux-amd64.tar.gz) |
 
 ### `api-pilot-test-runner-v2.2.0`
 
@@ -253,6 +282,8 @@ Use a local runner for:
 | --- | --- |
 | macOS Apple Silicon | [api-pilot-test-runner-mac-arm64.tar.gz](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v2.2.0/api-pilot-test-runner-mac-arm64.tar.gz) |
 | macOS Intel | [api-pilot-test-runner-mac-amd64.tar.gz](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v2.2.0/api-pilot-test-runner-mac-amd64.tar.gz) |
+| Windows x64 | [api-pilot-test-runner-windows-amd64.zip](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v2.2.0/api-pilot-test-runner-windows-amd64.zip) |
+| Linux x64 | [api-pilot-test-runner-linux-amd64.tar.gz](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v2.2.0/api-pilot-test-runner-linux-amd64.tar.gz) |
 
 ### `api-pilot-test-runner-v1.2.0`
 
@@ -310,18 +341,18 @@ Windows users must add the install folder, for example `C:\api-pilot\`, to the s
 
 ### TestPilot Worker File Not Found
 
-For manual Windows/Linux installs, keep `api-pilot-test-runner`, `testpilot_worker.mjs`, `package.json`, and `package-lock.json` in the same folder.
+For manual Windows/Linux installs, keep the extracted `worker` directory adjacent to `api-pilot-test-runner` or `api-pilot-test-runner.exe`.
 
 If needed, set the worker path explicitly:
 
 ```bash
-export API_PILOT_TEST_RUNNER_WORKER_PATH="$HOME/.local/api-pilot-test-runner/testpilot_worker.mjs"
+export API_PILOT_TEST_RUNNER_WORKER_PATH="$HOME/.local/lib/api-pilot-test-runner/worker/testpilot_worker.mjs"
 ```
 
 Windows PowerShell:
 
 ```powershell
-$env:API_PILOT_TEST_RUNNER_WORKER_PATH = "C:\api-pilot-test-runner\testpilot_worker.mjs"
+$env:API_PILOT_TEST_RUNNER_WORKER_PATH = "C:\api-pilot-test-runner\worker\testpilot_worker.mjs"
 ```
 
 ### Playwright Or Chromium Missing
