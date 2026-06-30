@@ -5,10 +5,10 @@ class ApiPilotTestMobileRunner < Formula
 
   if Hardware::CPU.arm?
     url "https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-mobile-runner-v0.2.4/api-pilot-test-mobile-runner-0.2.4-mac-arm64.tar.gz"
-    sha256 "849869f5672fb7f8be9d60a06deb6c166724e382f0b689b075e37af34e9c396b"
+    sha256 "c70d2c55469744f241ef6311a4bbfeff3bc762b5d1e664932e4e613266c5af79"
   else
     url "https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-mobile-runner-v0.2.4/api-pilot-test-mobile-runner-0.2.4-mac-amd64.tar.gz"
-    sha256 "5ef68af78a2b820ef9a8374675f597e0a89cd8aced7c7442b1b08e0a409b9c15"
+    sha256 "e53e3246bf2c8a7a01b1d5707958bf3cefc7f5acc0deab8c3cb3f59ce4453306"
   end
 
   depends_on "node"
