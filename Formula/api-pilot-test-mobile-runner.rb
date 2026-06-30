@@ -1,14 +1,14 @@
 class ApiPilotTestMobileRunner < Formula
   desc "Local Appium 3 native mobile runner for API Pilot"
   homepage "https://github.com/faizalfakhri0001/api-pilot-runner"
-  version "0.1.4"
+  version "0.1.5"
 
   if Hardware::CPU.arm?
-    url "https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-mobile-runner-v0.1.4/api-pilot-test-mobile-runner-0.1.4-mac-arm64.tar.gz"
-    sha256 "3dc419d14a108b02e9304aa730a441b36747ab964cb214361c017a6b4eb2d198"
+    url "https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-mobile-runner-v0.1.5/api-pilot-test-mobile-runner-0.1.5-mac-arm64.tar.gz"
+    sha256 "8a97146b18f4f057a56646a523bd8ad0c33a6a2d7b28927e47b5ce3997f524d1"
   else
-    url "https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-mobile-runner-v0.1.4/api-pilot-test-mobile-runner-0.1.4-mac-amd64.tar.gz"
-    sha256 "37e33f9620541e843d91d8767ba58151d700b9f897bad21a1594d59f84c1fcc1"
+    url "https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-mobile-runner-v0.1.5/api-pilot-test-mobile-runner-0.1.5-mac-amd64.tar.gz"
+    sha256 "450eb46e72881adff9d2630158913de6ae1f132acaa2ffa8c5237a39fda7b7fd"
   end
 
   depends_on "node"
@@ -23,6 +23,15 @@ class ApiPilotTestMobileRunner < Formula
     (bin/"api-pilot-test-mobile-runner").write <<~SH
       #!/bin/bash
       export API_PILOT_APPIUM_PATH="#{libexec}/worker/node_modules/.bin/appium"
+      if [ -d "$HOME/Library/Android/sdk/platform-tools" ]; then
+        export PATH="$HOME/Library/Android/sdk/platform-tools:$PATH"
+      fi
+      if [ -n "$ANDROID_HOME" ] && [ -d "$ANDROID_HOME/platform-tools" ]; then
+        export PATH="$ANDROID_HOME/platform-tools:$PATH"
+      fi
+      if [ -n "$ANDROID_SDK_ROOT" ] && [ -d "$ANDROID_SDK_ROOT/platform-tools" ]; then
+        export PATH="$ANDROID_SDK_ROOT/platform-tools:$PATH"
+      fi
       exec "#{libexec}/api-pilot-test-mobile-runner" "$@"
     SH
   end
