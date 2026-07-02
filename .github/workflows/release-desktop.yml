@@ -243,7 +243,8 @@ jobs:
           GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
         run: |
           set -euo pipefail
-          export GNUPGHOME="$RUNNER_TEMP/api-pilot-release-gnupg"
+          export GNUPGHOME="/tmp/api-pilot-gnupg-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          rm -rf "$GNUPGHOME"
           mkdir -p "$GNUPGHOME"
           chmod 700 "$GNUPGHOME"
           {
@@ -253,9 +254,10 @@ jobs:
             fi
           } > "$GNUPGHOME/gpg-agent.conf"
           gpgconf --kill gpg-agent || true
-          gpgconf --launch gpg-agent
-          printf '%s' "$GPG_PRIVATE_KEY" > "$RUNNER_TEMP/api-pilot-release-key.asc"
-          gpg --batch --yes --pinentry-mode loopback --passphrase "$GPG_PASSPHRASE" --import "$RUNNER_TEMP/api-pilot-release-key.asc"
+          release_key_file="/tmp/api-pilot-release-key-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}.asc"
+          printf '%s' "$GPG_PRIVATE_KEY" > "$release_key_file"
+          gpg --batch --yes --pinentry-mode loopback --passphrase "$GPG_PASSPHRASE" --import "$release_key_file"
+          rm -f "$release_key_file"
           gpg --batch --list-secret-keys "$GPG_KEY_ID" >/dev/null
           echo "GNUPGHOME=$GNUPGHOME" >> "$GITHUB_ENV"
 
