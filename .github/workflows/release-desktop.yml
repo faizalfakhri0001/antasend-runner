@@ -239,14 +239,23 @@ jobs:
       - name: Import GPG release key
         env:
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
           GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
         run: |
           set -euo pipefail
           export GNUPGHOME="$RUNNER_TEMP/api-pilot-release-gnupg"
           mkdir -p "$GNUPGHOME"
           chmod 700 "$GNUPGHOME"
+          {
+            echo "allow-loopback-pinentry"
+            if command -v pinentry >/dev/null 2>&1; then
+              echo "pinentry-program $(command -v pinentry)"
+            fi
+          } > "$GNUPGHOME/gpg-agent.conf"
+          gpgconf --kill gpg-agent || true
+          gpgconf --launch gpg-agent
           printf '%s' "$GPG_PRIVATE_KEY" > "$RUNNER_TEMP/api-pilot-release-key.asc"
-          gpg --batch --import "$RUNNER_TEMP/api-pilot-release-key.asc"
+          gpg --batch --yes --pinentry-mode loopback --passphrase "$GPG_PASSPHRASE" --import "$RUNNER_TEMP/api-pilot-release-key.asc"
           gpg --batch --list-secret-keys "$GPG_KEY_ID" >/dev/null
           echo "GNUPGHOME=$GNUPGHOME" >> "$GITHUB_ENV"
 
