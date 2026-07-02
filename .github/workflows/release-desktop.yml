@@ -1,0 +1,357 @@
+name: Release API Pilot Desktop
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_ref:
+        description: "Full 40-character commit SHA from faizalfakhri0001/api-pilot"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+  id-token: write
+  attestations: write
+  artifact-metadata: write
+
+concurrency:
+  group: api-pilot-runner-desktop-v1.0.0
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Build, sign, attest, and publish desktop installers
+    runs-on: [self-hosted, macOS, ARM64, api-pilot-desktop-release-macos-arm64]
+    timeout-minutes: 180
+    env:
+      RELEASE_TAG: api-pilot-runner-desktop-v1.0.0
+      RELEASE_NAME: api-pilot-runner-desktop-v1.0.0
+      DESKTOP_VERSION: "1.0.0"
+      SOURCE_REPOSITORY: faizalfakhri0001/api-pilot
+      API_PILOT_COMPONENT_PRIVATE_KEY_PEM: ${{ secrets.API_PILOT_COMPONENT_PRIVATE_KEY_PEM }}
+      API_PILOT_COMPONENT_PUBLIC_KEY: ${{ secrets.API_PILOT_COMPONENT_PUBLIC_KEY }}
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: Validate workflow input
+        env:
+          SOURCE_REF: ${{ inputs.source_ref }}
+        run: |
+          set -euo pipefail
+          if [[ ! "$SOURCE_REF" =~ ^[0-9a-fA-F]{40}$ ]]; then
+            echo "source_ref must be a full 40-character commit SHA" >&2
+            exit 1
+          fi
+
+      - name: Validate required secrets
+        env:
+          SOURCE_REPO_READ_TOKEN: ${{ secrets.SOURCE_REPO_READ_TOKEN }}
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
+        run: |
+          set -euo pipefail
+          required=(
+            SOURCE_REPO_READ_TOKEN
+            GPG_PRIVATE_KEY
+            GPG_PASSPHRASE
+            GPG_KEY_ID
+            API_PILOT_COMPONENT_PRIVATE_KEY_PEM
+            API_PILOT_COMPONENT_PUBLIC_KEY
+          )
+          for name in "${required[@]}"; do
+            if [[ -z "${!name:-}" ]]; then
+              echo "Missing required secret: $name" >&2
+              exit 1
+            fi
+          done
+
+      - name: Add Homebrew toolchain to PATH
+        run: |
+          set -euo pipefail
+          {
+            echo "/opt/homebrew/bin"
+            echo "/opt/homebrew/opt/rustup/bin"
+            echo "$HOME/.cargo/bin"
+            echo "/opt/homebrew/opt/llvm/bin"
+          } >> "$GITHUB_PATH"
+
+      - name: Checkout distribution repository
+        uses: actions/checkout@v4
+        with:
+          path: distribution
+          persist-credentials: false
+
+      - name: Check release tag availability
+        working-directory: distribution
+        run: |
+          set -euo pipefail
+          if gh release view "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            echo "Release already exists: $RELEASE_TAG" >&2
+            exit 1
+          fi
+          if git ls-remote --exit-code --tags origin "refs/tags/$RELEASE_TAG" >/dev/null 2>&1; then
+            echo "Git tag already exists: $RELEASE_TAG" >&2
+            exit 1
+          fi
+
+      - name: Checkout private source repository
+        uses: actions/checkout@v4
+        with:
+          repository: faizalfakhri0001/api-pilot
+          ref: ${{ inputs.source_ref }}
+          token: ${{ secrets.SOURCE_REPO_READ_TOKEN }}
+          path: source
+          persist-credentials: false
+
+      - name: Verify checked out source commit
+        id: source
+        env:
+          SOURCE_REF: ${{ inputs.source_ref }}
+        run: |
+          set -euo pipefail
+          source_commit="$(git -C source rev-parse HEAD)"
+          if [[ "${source_commit,,}" != "${SOURCE_REF,,}" ]]; then
+            echo "Checked out $source_commit, expected $SOURCE_REF" >&2
+            exit 1
+          fi
+          echo "source_commit=$source_commit" >> "$GITHUB_OUTPUT"
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: "1.25.0"
+          cache-dependency-path: source/backend/go.sum
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: |
+            source/desktop/package-lock.json
+            source/backend/cmd/test-runner/worker/package-lock.json
+            source/backend/cmd/test-mobile-runner/worker/package-lock.json
+
+      - name: Verify local release toolchain
+        run: |
+          set -euo pipefail
+          command -v git
+          command -v gh
+          command -v gpg
+          command -v make
+          command -v shasum
+          command -v node
+          command -v npm
+          command -v go
+          command -v rustup
+          command -v cargo
+          command -v cargo-xwin
+          command -v makensis
+          command -v clang
+          docker info >/dev/null
+          rustup target add x86_64-pc-windows-msvc
+
+      - name: Install desktop dependencies
+        working-directory: source/desktop
+        run: npm ci
+
+      - name: Run desktop release validation tests
+        run: |
+          set -euo pipefail
+          (cd source/desktop && npm test)
+          (cd source/desktop && npm run build)
+          cargo test --locked --manifest-path source/desktop/src-tauri/Cargo.toml
+          (cd source/backend && go test ./cmd/runner ./cmd/test-runner ./cmd/test-mobile-runner ./internal/runnercontrol)
+
+      - name: Build macOS DMG
+        working-directory: source
+        run: make desktop-dmg-production
+
+      - name: Verify macOS component manifest
+        working-directory: source
+        run: |
+          set -euo pipefail
+          node --input-type=module - <<'NODE'
+          import { verifyBundledComponentManifest } from "./desktop/scripts/release-component-gate.mjs";
+          verifyBundledComponentManifest("./desktop", {
+            targetOs: "darwin",
+            targetArch: "arm64",
+            publicKeyBase64: process.env.API_PILOT_COMPONENT_PUBLIC_KEY
+          });
+          NODE
+
+      - name: Build Windows NSIS installer
+        working-directory: source
+        run: make desktop-exe-production
+
+      - name: Verify Windows component manifest
+        working-directory: source
+        run: |
+          set -euo pipefail
+          node --input-type=module - <<'NODE'
+          import { verifyBundledComponentManifest } from "./desktop/scripts/release-component-gate.mjs";
+          verifyBundledComponentManifest("./desktop", {
+            targetOs: "windows",
+            targetArch: "amd64",
+            publicKeyBase64: process.env.API_PILOT_COMPONENT_PUBLIC_KEY
+          });
+          NODE
+          if find desktop/src-tauri/target/x86_64-pc-windows-msvc/release/bundle -name '*.msi' -print -quit | grep -q .; then
+            echo "Windows desktop free release must only publish NSIS .exe, but an MSI was found" >&2
+            exit 1
+          fi
+
+      - name: Build Linux Debian package
+        working-directory: source
+        run: make desktop-deb-production
+
+      - name: Verify Linux component manifest
+        working-directory: source
+        run: |
+          set -euo pipefail
+          node --input-type=module - <<'NODE'
+          import { verifyBundledComponentManifest } from "./desktop/scripts/release-component-gate.mjs";
+          verifyBundledComponentManifest("./desktop", {
+            targetOs: "linux",
+            targetArch: "amd64",
+            publicKeyBase64: process.env.API_PILOT_COMPONENT_PUBLIC_KEY
+          });
+          NODE
+
+      - name: Collect and normalize release assets
+        run: |
+          set -euo pipefail
+          mkdir -p release-assets
+          dmg="$(find source/desktop/src-tauri/target/release/bundle/dmg -maxdepth 1 -type f -name '*.dmg' -print -quit)"
+          exe="$(find source/desktop/src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis -maxdepth 1 -type f -name '*-setup.exe' -print -quit)"
+          deb="$(find source/desktop/src-tauri/target/release/bundle/deb -maxdepth 1 -type f -name '*.deb' -print -quit)"
+          test -n "$dmg"
+          test -n "$exe"
+          test -n "$deb"
+          cp "$dmg" "release-assets/${RELEASE_TAG}-macos-arm64.dmg"
+          cp "$exe" "release-assets/${RELEASE_TAG}-windows-amd64-setup.exe"
+          cp "$deb" "release-assets/${RELEASE_TAG}-linux-amd64.deb"
+          ls -lh release-assets
+
+      - name: Import GPG release key
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+          GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
+        run: |
+          set -euo pipefail
+          export GNUPGHOME="$RUNNER_TEMP/api-pilot-release-gnupg"
+          mkdir -p "$GNUPGHOME"
+          chmod 700 "$GNUPGHOME"
+          printf '%s' "$GPG_PRIVATE_KEY" > "$RUNNER_TEMP/api-pilot-release-key.asc"
+          gpg --batch --import "$RUNNER_TEMP/api-pilot-release-key.asc"
+          gpg --batch --list-secret-keys "$GPG_KEY_ID" >/dev/null
+          echo "GNUPGHOME=$GNUPGHOME" >> "$GITHUB_ENV"
+
+      - name: Generate checksums and signed release metadata
+        env:
+          SOURCE_COMMIT: ${{ steps.source.outputs.source_commit }}
+          GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
+          GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
+        run: |
+          set -euo pipefail
+          cd release-assets
+          shasum -a 256 \
+            "${RELEASE_TAG}-macos-arm64.dmg" \
+            "${RELEASE_TAG}-windows-amd64-setup.exe" \
+            "${RELEASE_TAG}-linux-amd64.deb" > SHA256SUMS
+          cd ..
+          node <<'NODE'
+          const { createHash } = require("node:crypto");
+          const { readdirSync, readFileSync, writeFileSync } = require("node:fs");
+          const path = require("node:path");
+          const assetDir = "release-assets";
+          const artifactNames = [
+            `${process.env.RELEASE_TAG}-macos-arm64.dmg`,
+            `${process.env.RELEASE_TAG}-windows-amd64-setup.exe`,
+            `${process.env.RELEASE_TAG}-linux-amd64.deb`
+          ];
+          const sha256 = (name) => createHash("sha256").update(readFileSync(path.join(assetDir, name))).digest("hex");
+          const metadata = {
+            schemaVersion: "api-pilot.desktop.github-release.v1",
+            releaseTag: process.env.RELEASE_TAG,
+            releaseName: process.env.RELEASE_NAME,
+            desktopVersion: process.env.DESKTOP_VERSION,
+            sourceRepository: process.env.SOURCE_REPOSITORY,
+            sourceCommit: process.env.SOURCE_COMMIT,
+            distributionRepository: process.env.GITHUB_REPOSITORY,
+            distributionCommit: process.env.GITHUB_SHA,
+            workflow: process.env.GITHUB_WORKFLOW,
+            workflowRunId: process.env.GITHUB_RUN_ID,
+            workflowRunAttempt: process.env.GITHUB_RUN_ATTEMPT,
+            generatedAt: new Date().toISOString(),
+            trustModel: {
+              gpg: "SHA256SUMS and RELEASE-METADATA.json are signed with the configured release GPG key",
+              artifactAttestation: "GitHub Artifact Attestation is generated by this public repository workflow",
+              osCodeSigning: "Not included in this free release path; Windows Authenticode and Apple notarization are separate trust paths"
+            },
+            assets: artifactNames.map((name) => ({ name, sha256: sha256(name) })),
+            signedFiles: ["SHA256SUMS", "RELEASE-METADATA.json"],
+            attestedFiles: [...artifactNames, "SHA256SUMS", "RELEASE-METADATA.json"]
+          };
+          writeFileSync(path.join(assetDir, "RELEASE-METADATA.json"), `${JSON.stringify(metadata, null, 2)}\n`);
+          console.log(JSON.stringify({ assets: readdirSync(assetDir).sort() }, null, 2));
+          NODE
+          gpg --batch --yes --pinentry-mode loopback --passphrase "$GPG_PASSPHRASE" --local-user "$GPG_KEY_ID" --armor --detach-sign --output release-assets/SHA256SUMS.asc release-assets/SHA256SUMS
+          gpg --batch --yes --pinentry-mode loopback --passphrase "$GPG_PASSPHRASE" --local-user "$GPG_KEY_ID" --armor --detach-sign --output release-assets/RELEASE-METADATA.json.asc release-assets/RELEASE-METADATA.json
+
+      - name: Verify GPG signatures and checksums
+        run: |
+          set -euo pipefail
+          gpg --batch --verify release-assets/SHA256SUMS.asc release-assets/SHA256SUMS
+          gpg --batch --verify release-assets/RELEASE-METADATA.json.asc release-assets/RELEASE-METADATA.json
+          (cd release-assets && shasum -a 256 -c SHA256SUMS)
+
+      - name: Generate GitHub artifact attestations
+        uses: actions/attest@v4
+        with:
+          subject-path: |
+            release-assets/${{ env.RELEASE_TAG }}-macos-arm64.dmg
+            release-assets/${{ env.RELEASE_TAG }}-windows-amd64-setup.exe
+            release-assets/${{ env.RELEASE_TAG }}-linux-amd64.deb
+            release-assets/SHA256SUMS
+            release-assets/RELEASE-METADATA.json
+
+      - name: Write release notes
+        env:
+          SOURCE_COMMIT: ${{ steps.source.outputs.source_commit }}
+        run: |
+          set -euo pipefail
+          cat > release-notes.md <<EOF
+          # ${RELEASE_NAME}
+
+          Desktop installer release for API Pilot Desktop ${DESKTOP_VERSION}.
+
+          Source repository: \`${SOURCE_REPOSITORY}\`
+          Source commit: \`${SOURCE_COMMIT}\`
+
+          This release uses the free integrity path:
+          - SHA-256 checksums in \`SHA256SUMS\`
+          - GPG detached signatures for \`SHA256SUMS\` and \`RELEASE-METADATA.json\`
+          - GitHub Artifact Attestation for the installers, \`SHA256SUMS\`, and \`RELEASE-METADATA.json\`
+
+          This release does not provide Windows Authenticode signing or Apple notarization.
+
+          Verify attestation:
+
+          \`\`\`bash
+          gh attestation verify ${RELEASE_TAG}-macos-arm64.dmg -R ${GITHUB_REPOSITORY}
+          gh attestation verify ${RELEASE_TAG}-windows-amd64-setup.exe -R ${GITHUB_REPOSITORY}
+          gh attestation verify ${RELEASE_TAG}-linux-amd64.deb -R ${GITHUB_REPOSITORY}
+          \`\`\`
+          EOF
+
+      - name: Publish GitHub release
+        run: |
+          set -euo pipefail
+          gh release create "$RELEASE_TAG" release-assets/* \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "$RELEASE_NAME" \
+            --notes-file release-notes.md \
+            --target "$GITHUB_SHA" \
+            --latest=false
