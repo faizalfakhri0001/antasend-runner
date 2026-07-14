@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       source_ref:
-        description: "Full 40-character commit SHA from faizalfakhri0001/api-pilot"
+        description: "Full 40-character commit SHA from faizalfakhri0001/antasend"
         required: true
         type: string
 
@@ -27,7 +27,7 @@ jobs:
       RELEASE_TAG: api-pilot-runner-desktop-v1.1.0
       RELEASE_NAME: api-pilot-runner-desktop-v1.1.0
       DESKTOP_VERSION: "1.1.0"
-      SOURCE_REPOSITORY: faizalfakhri0001/api-pilot
+      SOURCE_REPOSITORY: faizalfakhri0001/antasend
       GH_TOKEN: ${{ github.token }}
 
     steps:
@@ -94,7 +94,7 @@ jobs:
       - name: Checkout private source repository
         uses: actions/checkout@v6
         with:
-          repository: faizalfakhri0001/api-pilot
+          repository: faizalfakhri0001/antasend
           ref: ${{ inputs.source_ref }}
           token: ${{ secrets.SOURCE_REPO_READ_TOKEN }}
           path: source

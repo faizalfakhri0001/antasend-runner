@@ -21,7 +21,7 @@ Verify a downloaded desktop installer:
 ```sh
 gpg --verify SHA256SUMS.asc SHA256SUMS
 shasum -a 256 -c SHA256SUMS
-gh attestation verify api-pilot-runner-desktop-v1.0.0-macos-arm64.dmg -R faizalfakhri0001/api-pilot-runner
+gh attestation verify api-pilot-runner-desktop-v1.0.0-macos-arm64.dmg -R faizalfakhri0001/antasend-runner
 ```
 
 The release workflow requires a self-hosted macOS Apple Silicon runner with the label `api-pilot-desktop-release-macos-arm64`. Configure these repository secrets before dispatching the workflow:
@@ -76,7 +76,7 @@ Homebrew is the recommended installation method on macOS.
 ### Install The HTTP Runner
 
 ```bash
-brew tap faizalfakhri0001/api-pilot-runner https://github.com/faizalfakhri0001/api-pilot-runner.git
+brew tap faizalfakhri0001/antasend-runner https://github.com/faizalfakhri0001/antasend-runner.git
 brew install api-pilot-runner
 api-pilot-runner version
 ```
@@ -84,7 +84,7 @@ api-pilot-runner version
 ### Install The TestPilot Browser Runner
 
 ```bash
-brew tap faizalfakhri0001/api-pilot-runner https://github.com/faizalfakhri0001/api-pilot-runner.git
+brew tap faizalfakhri0001/antasend-runner https://github.com/faizalfakhri0001/antasend-runner.git
 brew install api-pilot-test-runner
 api-pilot-test-runner version
 ```
@@ -94,7 +94,7 @@ The formula automatically selects the macOS Apple Silicon (`arm64`) or Intel (`a
 ### Install The TestPilot Native Mobile Runner
 
 ```bash
-brew tap faizalfakhri0001/api-pilot-runner https://github.com/faizalfakhri0001/api-pilot-runner.git
+brew tap faizalfakhri0001/antasend-runner https://github.com/faizalfakhri0001/antasend-runner.git
 brew install api-pilot-test-mobile-runner
 api-pilot-test-mobile-runner version
 ```
@@ -117,8 +117,8 @@ If Homebrew keeps an old tap cache, reset the tap:
 ```bash
 brew uninstall api-pilot-runner || true
 brew uninstall api-pilot-test-runner || true
-brew untap faizalfakhri0001/api-pilot-runner || true
-brew tap faizalfakhri0001/api-pilot-runner https://github.com/faizalfakhri0001/api-pilot-runner.git
+brew untap faizalfakhri0001/antasend-runner || true
+brew tap faizalfakhri0001/antasend-runner https://github.com/faizalfakhri0001/antasend-runner.git
 brew install api-pilot-runner
 ```
 
@@ -129,7 +129,7 @@ Windows binaries are distributed as `.zip` files in GitHub Releases.
 ### Install The HTTP Runner
 
 1. Download:
-   - [api-pilot-runner-windows-amd64.zip](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-runner-v1.2.0/api-pilot-runner-windows-amd64.zip)
+   - [api-pilot-runner-windows-amd64.zip](https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-runner-v1.2.0/api-pilot-runner-windows-amd64.zip)
 2. Extract the zip.
 3. Move `api-pilot-runner.exe` to a permanent folder, for example:
 
@@ -147,7 +147,7 @@ Windows binaries are distributed as `.zip` files in GitHub Releases.
 ### Install The TestPilot Browser Runner
 
 1. Install Node.js 20 or newer.
-2. Download and extract [api-pilot-test-runner-windows-amd64.zip](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v2.4.2/api-pilot-test-runner-windows-amd64.zip).
+2. Download and extract [api-pilot-test-runner-windows-amd64.zip](https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-test-runner-v2.4.2/api-pilot-test-runner-windows-amd64.zip).
 3. Keep `api-pilot-test-runner.exe` beside the extracted `worker` directory.
 4. Install the worker dependencies from PowerShell:
 
@@ -162,7 +162,7 @@ Windows binaries are distributed as `.zip` files in GitHub Releases.
 ### Install The TestPilot Native Mobile Runner
 
 1. Install Node.js 20 or newer plus Android SDK tooling.
-2. Download and extract [api-pilot-test-mobile-runner-0.1.2-windows-amd64.zip](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-mobile-runner-v0.1.2/api-pilot-test-mobile-runner-0.1.2-windows-amd64.zip).
+2. Download and extract [api-pilot-test-mobile-runner-0.1.2-windows-amd64.zip](https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-test-mobile-runner-v0.1.2/api-pilot-test-mobile-runner-0.1.2-windows-amd64.zip).
 3. Keep `api-pilot-test-mobile-runner.exe` beside the extracted `worker` directory.
 4. Install the worker dependencies from PowerShell:
 
@@ -182,7 +182,7 @@ Linux binaries are distributed as `.tar.gz` files in GitHub Releases.
 
 ```bash
 curl -L -o api-pilot-runner-linux-amd64.tar.gz \
-  https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-runner-v1.2.0/api-pilot-runner-linux-amd64.tar.gz
+  https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-runner-v1.2.0/api-pilot-runner-linux-amd64.tar.gz
 
 tar -xzf api-pilot-runner-linux-amd64.tar.gz
 chmod +x api-pilot-runner
@@ -195,7 +195,7 @@ api-pilot-runner version
 
 ```bash
 curl -L -o api-pilot-test-runner-linux-amd64.tar.gz \
-  https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v2.4.2/api-pilot-test-runner-linux-amd64.tar.gz
+  https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-test-runner-v2.4.2/api-pilot-test-runner-linux-amd64.tar.gz
 
 mkdir -p "$HOME/.local/lib/api-pilot-test-runner"
 tar -xzf api-pilot-test-runner-linux-amd64.tar.gz \
@@ -215,7 +215,7 @@ Node.js 20 or newer is required. Keep the extracted `worker` directory adjacent 
 
 ```bash
 curl -L -o api-pilot-test-mobile-runner-0.1.2-linux-amd64.tar.gz \
-  https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-mobile-runner-v0.1.2/api-pilot-test-mobile-runner-0.1.2-linux-amd64.tar.gz
+  https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-test-mobile-runner-v0.1.2/api-pilot-test-mobile-runner-0.1.2-linux-amd64.tar.gz
 
 mkdir -p "$HOME/.local/lib/api-pilot-test-mobile-runner"
 tar -xzf api-pilot-test-mobile-runner-0.1.2-linux-amd64.tar.gz \
@@ -371,60 +371,60 @@ Use a local runner for:
 
 | Platform | Asset |
 | --- | --- |
-| macOS Apple Silicon | [api-pilot-runner-mac-arm64.tar.gz](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-runner-v1.2.0/api-pilot-runner-mac-arm64.tar.gz) |
-| macOS Intel | [api-pilot-runner-mac-amd64.tar.gz](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-runner-v1.2.0/api-pilot-runner-mac-amd64.tar.gz) |
-| Windows x64 | [api-pilot-runner-windows-amd64.zip](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-runner-v1.2.0/api-pilot-runner-windows-amd64.zip) |
-| Linux x64 | [api-pilot-runner-linux-amd64.tar.gz](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-runner-v1.2.0/api-pilot-runner-linux-amd64.tar.gz) |
+| macOS Apple Silicon | [api-pilot-runner-mac-arm64.tar.gz](https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-runner-v1.2.0/api-pilot-runner-mac-arm64.tar.gz) |
+| macOS Intel | [api-pilot-runner-mac-amd64.tar.gz](https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-runner-v1.2.0/api-pilot-runner-mac-amd64.tar.gz) |
+| Windows x64 | [api-pilot-runner-windows-amd64.zip](https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-runner-v1.2.0/api-pilot-runner-windows-amd64.zip) |
+| Linux x64 | [api-pilot-runner-linux-amd64.tar.gz](https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-runner-v1.2.0/api-pilot-runner-linux-amd64.tar.gz) |
 
 ### `api-pilot-test-runner-v2.4.2`
 
 | Platform | Asset |
 | --- | --- |
-| macOS Apple Silicon | [api-pilot-test-runner-mac-arm64.tar.gz](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v2.4.2/api-pilot-test-runner-mac-arm64.tar.gz) |
-| macOS Intel | [api-pilot-test-runner-mac-amd64.tar.gz](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v2.4.2/api-pilot-test-runner-mac-amd64.tar.gz) |
-| Windows x64 | [api-pilot-test-runner-windows-amd64.zip](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v2.4.2/api-pilot-test-runner-windows-amd64.zip) |
-| Linux x64 | [api-pilot-test-runner-linux-amd64.tar.gz](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v2.4.2/api-pilot-test-runner-linux-amd64.tar.gz) |
+| macOS Apple Silicon | [api-pilot-test-runner-mac-arm64.tar.gz](https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-test-runner-v2.4.2/api-pilot-test-runner-mac-arm64.tar.gz) |
+| macOS Intel | [api-pilot-test-runner-mac-amd64.tar.gz](https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-test-runner-v2.4.2/api-pilot-test-runner-mac-amd64.tar.gz) |
+| Windows x64 | [api-pilot-test-runner-windows-amd64.zip](https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-test-runner-v2.4.2/api-pilot-test-runner-windows-amd64.zip) |
+| Linux x64 | [api-pilot-test-runner-linux-amd64.tar.gz](https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-test-runner-v2.4.2/api-pilot-test-runner-linux-amd64.tar.gz) |
 
 ### `api-pilot-test-mobile-runner-v0.1.0`
 
 | Platform | Asset |
 | --- | --- |
-| macOS Apple Silicon | [api-pilot-test-mobile-runner-0.1.0-mac-arm64.tar.gz](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-mobile-runner-v0.1.0/api-pilot-test-mobile-runner-0.1.0-mac-arm64.tar.gz) |
-| macOS Intel | [api-pilot-test-mobile-runner-0.1.0-mac-amd64.tar.gz](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-mobile-runner-v0.1.0/api-pilot-test-mobile-runner-0.1.0-mac-amd64.tar.gz) |
+| macOS Apple Silicon | [api-pilot-test-mobile-runner-0.1.0-mac-arm64.tar.gz](https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-test-mobile-runner-v0.1.0/api-pilot-test-mobile-runner-0.1.0-mac-arm64.tar.gz) |
+| macOS Intel | [api-pilot-test-mobile-runner-0.1.0-mac-amd64.tar.gz](https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-test-mobile-runner-v0.1.0/api-pilot-test-mobile-runner-0.1.0-mac-amd64.tar.gz) |
 
 ### `api-pilot-test-runner-v2.2.0`
 
 | Platform | Asset |
 | --- | --- |
-| macOS Apple Silicon | [api-pilot-test-runner-mac-arm64.tar.gz](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v2.2.0/api-pilot-test-runner-mac-arm64.tar.gz) |
-| macOS Intel | [api-pilot-test-runner-mac-amd64.tar.gz](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v2.2.0/api-pilot-test-runner-mac-amd64.tar.gz) |
-| Windows x64 | [api-pilot-test-runner-windows-amd64.zip](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v2.2.0/api-pilot-test-runner-windows-amd64.zip) |
-| Linux x64 | [api-pilot-test-runner-linux-amd64.tar.gz](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v2.2.0/api-pilot-test-runner-linux-amd64.tar.gz) |
+| macOS Apple Silicon | [api-pilot-test-runner-mac-arm64.tar.gz](https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-test-runner-v2.2.0/api-pilot-test-runner-mac-arm64.tar.gz) |
+| macOS Intel | [api-pilot-test-runner-mac-amd64.tar.gz](https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-test-runner-v2.2.0/api-pilot-test-runner-mac-amd64.tar.gz) |
+| Windows x64 | [api-pilot-test-runner-windows-amd64.zip](https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-test-runner-v2.2.0/api-pilot-test-runner-windows-amd64.zip) |
+| Linux x64 | [api-pilot-test-runner-linux-amd64.tar.gz](https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-test-runner-v2.2.0/api-pilot-test-runner-linux-amd64.tar.gz) |
 
 ### `api-pilot-test-runner-v1.2.0`
 
 | Platform | Asset |
 | --- | --- |
-| macOS Apple Silicon | [api-pilot-test-runner-mac-arm64.tar.gz](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v1.2.0/api-pilot-test-runner-mac-arm64.tar.gz) |
-| macOS Intel | [api-pilot-test-runner-mac-amd64.tar.gz](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v1.2.0/api-pilot-test-runner-mac-amd64.tar.gz) |
+| macOS Apple Silicon | [api-pilot-test-runner-mac-arm64.tar.gz](https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-test-runner-v1.2.0/api-pilot-test-runner-mac-arm64.tar.gz) |
+| macOS Intel | [api-pilot-test-runner-mac-amd64.tar.gz](https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-test-runner-v1.2.0/api-pilot-test-runner-mac-amd64.tar.gz) |
 
 ### `api-pilot-runner-v1.1.0`
 
 | Platform | Asset |
 | --- | --- |
-| macOS Apple Silicon | [api-pilot-runner-mac-arm64.tar.gz](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-runner-v1.1.0/api-pilot-runner-mac-arm64.tar.gz) |
-| macOS Intel | [api-pilot-runner-mac-amd64.tar.gz](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-runner-v1.1.0/api-pilot-runner-mac-amd64.tar.gz) |
-| Windows x64 | [api-pilot-runner-windows-amd64.zip](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-runner-v1.1.0/api-pilot-runner-windows-amd64.zip) |
-| Linux x64 | [api-pilot-runner-linux-amd64.tar.gz](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-runner-v1.1.0/api-pilot-runner-linux-amd64.tar.gz) |
+| macOS Apple Silicon | [api-pilot-runner-mac-arm64.tar.gz](https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-runner-v1.1.0/api-pilot-runner-mac-arm64.tar.gz) |
+| macOS Intel | [api-pilot-runner-mac-amd64.tar.gz](https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-runner-v1.1.0/api-pilot-runner-mac-amd64.tar.gz) |
+| Windows x64 | [api-pilot-runner-windows-amd64.zip](https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-runner-v1.1.0/api-pilot-runner-windows-amd64.zip) |
+| Linux x64 | [api-pilot-runner-linux-amd64.tar.gz](https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-runner-v1.1.0/api-pilot-runner-linux-amd64.tar.gz) |
 
 ### `api-pilot-test-runner-v1.0.3`
 
 | Platform | Asset |
 | --- | --- |
-| macOS Apple Silicon | [api-pilot-test-runner-mac-arm64.tar.gz](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v1.0.3/api-pilot-test-runner-mac-arm64.tar.gz) |
-| macOS Intel | [api-pilot-test-runner-mac-amd64.tar.gz](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v1.0.3/api-pilot-test-runner-mac-amd64.tar.gz) |
-| Windows x64 | [api-pilot-test-runner-windows-amd64.zip](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v1.0.3/api-pilot-test-runner-windows-amd64.zip) |
-| Linux x64 | [api-pilot-test-runner-linux-amd64.tar.gz](https://github.com/faizalfakhri0001/api-pilot-runner/releases/download/api-pilot-test-runner-v1.0.3/api-pilot-test-runner-linux-amd64.tar.gz) |
+| macOS Apple Silicon | [api-pilot-test-runner-mac-arm64.tar.gz](https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-test-runner-v1.0.3/api-pilot-test-runner-mac-arm64.tar.gz) |
+| macOS Intel | [api-pilot-test-runner-mac-amd64.tar.gz](https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-test-runner-v1.0.3/api-pilot-test-runner-mac-amd64.tar.gz) |
+| Windows x64 | [api-pilot-test-runner-windows-amd64.zip](https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-test-runner-v1.0.3/api-pilot-test-runner-windows-amd64.zip) |
+| Linux x64 | [api-pilot-test-runner-linux-amd64.tar.gz](https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-test-runner-v1.0.3/api-pilot-test-runner-linux-amd64.tar.gz) |
 
 ## Troubleshooting
 
