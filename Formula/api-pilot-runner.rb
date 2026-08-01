@@ -1,14 +1,13 @@
 class ApiPilotRunner < Formula
   desc "Local runner agent for API Pilot"
   homepage "https://github.com/faizalfakhri0001/antasend-runner"
-  version "1.2.1"
-
+  version "1.3.1"
   if Hardware::CPU.arm?
-    url "https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-runner-v1.2.1/api-pilot-runner-mac-arm64.tar.gz"
-    sha256 "f4d5d7d1f7293180f5eb921434da837761ecebb9116740cbbe02362ed2b3efe5"
+    url "https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-runner-v1.3.1/api-pilot-runner-mac-arm64.tar.gz"
+    sha256 "d483d4124176be4e6d532d65bb41cd5c78474417709d20c82eacf0aedd226884"
   else
-    url "https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-runner-v1.2.1/api-pilot-runner-mac-amd64.tar.gz"
-    sha256 "cfff2c4f8dca7cf730cc111724a831ec6e0586fd4143f6e3f330c54f383c61ec"
+    url "https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-runner-v1.3.1/api-pilot-runner-mac-amd64.tar.gz"
+    sha256 "015b99f1b29b5c8441f5d6fd6c8cf5c9f4534d79900b36b9cad391a686fc5792"
   end
 
   def install
