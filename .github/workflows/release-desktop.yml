@@ -139,7 +139,8 @@ jobs:
 
   build-linux:
     name: Build unsigned Linux installer
-    runs-on: ubuntu-24.04
+    needs: build-macos-windows
+    runs-on: [self-hosted, macOS, ARM64, api-pilot-desktop-release-macos-arm64]
     timeout-minutes: 120
     outputs:
       source_commit: ${{ steps.source.outputs.source_commit }}
@@ -147,6 +148,7 @@ jobs:
       RELEASE_TAG: api-pilot-runner-desktop-dev-v2.1.0
       DESKTOP_VERSION: "2.1.0"
       SOURCE_REPOSITORY: faizalfakhri0001/antasend
+      API_PILOT_DESKTOP_DOCKER_CARGO_BUILD_JOBS: "2"
 
     steps:
       - name: Validate workflow input
@@ -196,41 +198,13 @@ jobs:
           cache: npm
           cache-dependency-path: source/desktop/package-lock.json
 
-      - name: Install Linux desktop build dependencies
-        run: |
-          set -euo pipefail
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends \
-            build-essential \
-            libayatana-appindicator3-dev \
-            libgtk-3-dev \
-            libssl-dev \
-            libwebkit2gtk-4.1-dev \
-            librsvg2-dev \
-            patchelf \
-            pkg-config
-
-      - name: Ensure Rust toolchain
-        run: |
-          set -euo pipefail
-          if ! command -v rustup >/dev/null 2>&1; then
-            curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal
-          fi
-          if [[ -f "$HOME/.cargo/env" ]]; then
-            printf '%s\n' "$HOME/.cargo/bin" >> "$GITHUB_PATH"
-            source "$HOME/.cargo/env"
-          fi
-          rustup toolchain install stable --profile minimal
-          rustup default stable
-          rustup target add x86_64-unknown-linux-gnu
-          cargo --version
-
       - name: Verify local release toolchain
         run: |
           set -euo pipefail
-          for command in git make shasum node npm go rustup cargo cc pkg-config patchelf; do
+          for command in git make shasum node npm go docker; do
             command -v "$command"
           done
+          docker info >/dev/null
 
       - name: Install desktop dependencies
         working-directory: source/desktop
