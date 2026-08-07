@@ -41,6 +41,16 @@ jobs:
             exit 1
           fi
 
+      - name: Add Homebrew toolchain to PATH
+        run: |
+          set -euo pipefail
+          {
+            echo "/opt/homebrew/bin"
+            echo "/opt/homebrew/opt/rustup/bin"
+            echo "$HOME/.cargo/bin"
+            echo "/opt/homebrew/opt/llvm/bin"
+          } >> "$GITHUB_PATH"
+
       - name: Checkout private source repository
         uses: actions/checkout@v6
         with:
@@ -160,6 +170,16 @@ jobs:
             echo "source_ref must be a full 40-character commit SHA" >&2
             exit 1
           fi
+
+      - name: Add Homebrew toolchain to PATH
+        run: |
+          set -euo pipefail
+          {
+            echo "/opt/homebrew/bin"
+            echo "/opt/homebrew/opt/rustup/bin"
+            echo "$HOME/.cargo/bin"
+            echo "/opt/homebrew/opt/llvm/bin"
+          } >> "$GITHUB_PATH"
 
       - name: Checkout private source repository
         uses: actions/checkout@v6
