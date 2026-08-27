@@ -1,13 +1,13 @@
 class ApiPilotTestMobileRunner < Formula
   desc "Local Appium 3 native mobile runner for API Pilot"
   homepage "https://github.com/faizalfakhri0001/antasend-runner"
-  version "0.3.6"
+  version "0.3.7"
   if Hardware::CPU.arm?
-    url "https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-test-mobile-runner-v0.3.6/api-pilot-test-mobile-runner-0.3.6-mac-arm64.tar.gz"
-    sha256 "927253ad4f1fd99351920e190fb381c3c16e36c248de42f8daf4de78a3f0190e"
+    url "https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-test-mobile-runner-v0.3.7/api-pilot-test-mobile-runner-0.3.7-mac-arm64.tar.gz"
+    sha256 "2494c014de0723162b9c19857000ea2238419bb21dea44302a15616ebab799f5"
   else
-    url "https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-test-mobile-runner-v0.3.6/api-pilot-test-mobile-runner-0.3.6-mac-amd64.tar.gz"
-    sha256 "489e06b9e96689e9cd7e2b0e5191d90c936214c659db9ee71110fab58fc30a25"
+    url "https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-test-mobile-runner-v0.3.7/api-pilot-test-mobile-runner-0.3.7-mac-amd64.tar.gz"
+    sha256 "59d2ba436bf5e7a43d6246107bf086d0cb2e667cc40eafa28b7eff8fa276b7a6"
   end
 
   depends_on "node"
