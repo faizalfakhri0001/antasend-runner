@@ -1,13 +1,13 @@
 class ApiPilotTestRunner < Formula
   desc "Local TestPilot browser runner for API Pilot"
   homepage "https://github.com/faizalfakhri0001/antasend-runner"
-  version "2.5.3"
+  version "2.6.0"
   if Hardware::CPU.arm?
-    url "https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-test-runner-v2.5.3/api-pilot-test-runner-mac-arm64.tar.gz"
-    sha256 "2d70072b80fb098c0adb2d4e4480c8cbde224872b0b3b182e23594d2a99c9996"
+    url "https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-test-runner-v2.6.0/api-pilot-test-runner-mac-arm64.tar.gz"
+    sha256 "baa81f524938989e7bac76f4544e85895e7ecd6445f8e95f76b472721b1fd492"
   else
-    url "https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-test-runner-v2.5.3/api-pilot-test-runner-mac-amd64.tar.gz"
-    sha256 "c56548f5db3c048242a587a9d484be055c500abf68b30c2e87c7bb0cc3c5d559"
+    url "https://github.com/faizalfakhri0001/antasend-runner/releases/download/api-pilot-test-runner-v2.6.0/api-pilot-test-runner-mac-amd64.tar.gz"
+    sha256 "d0698232154202ddbe5f03d79a8bec20c00990f5d65a0fd5540225371975b201"
   end
 
   depends_on "node"
